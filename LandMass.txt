@@ -1,0 +1,81 @@
+LandMass written by Jason Merlo
+jmerlo@austin.rr.com
+jason.merlo@frco.com
+http://home.austin.rr.com/smozzie
+
+NOTE:  You may need to turn 'Word Wrap' on (in the Edit menu) if you are reading this with Microsoft Notepad.
+
+Table of Contents
+1.0 What is LandMass?
+2.0 Building a map
+3.0 Interacting with a map
+4.0 Future enhancements
+--------------------------
+
+
+
+1.0 What is LandMass?
+
+LandMass was originally an experiment with Microsoft Flexgrids.  If you've never used them, Flexgrids are really, really handy for putting tabular data on a Visual Basic form.  As it turns out, "tabular data" can mean graphics too!  Unfortunately, they are very slow when you want to move large amounts of data.  So I eventually abandoned the concept and turned to the Win32 BitBlt instruction instead to do graphics tiling.
+
+LandMass is based on the old Commodore 64 game "Lords of Conquest" by Electronic Arts.  This game plays a little bit like the board game Risk, only there are different playing pieces and --here's the cool part-- the playfield can be generated randomly, so that no two games are the same.  (Side note:  If you are interested in playing this and other timeless C64 classics on your PC, I suggest going to one of the many great emulation websites out there and downloading an emulator.)
+
+As it stands right now, LandMass simply generates a random world based on settings that you can tune.  Each world is composed of countries and water.  Countries that border each other are shown with a borderline between them.  Each country has properties that can be read, such as its color or which other countries border it.  LandMass also contains a small example of how to read map parameters and interact with the map.
+
+The program is class-based, which means you can take the Map class and drop it into your own program.  And since each map is a separate object, you can generate multiple maps at once.  The code probably isn't as optimized as it could be, but with very little work you can have cool custom maps in your own program!
+
+
+
+2.0 Building a map
+
+LandMass is pretty simple to use.  
+
+The "Go!" button will generate a map and draw it on the screen.
+
+The "Redraw" button will redraw the current map on the screen.  This is useful if you want to change the color or border settings without generating a new map or if you want to clear all the red countries (explained below) off of the map.
+
+The "Draw" menu contains choices for borders and colors.  You can play with these and click "Redraw" to see their effects.
+
+The "Terraform" menu contains the vital map parameters.  After changing any parameters, the "Go!" button must be used to see their effects.  Experiment with different settings.  It's fun!  The "Terraform" settings are:
+
+*Country Size:  This specifies the approximate size of each country, from very small to very large.
+*Country Size Proportions:  This specifies the size deviation between countries on the map.  Proportional countries are all about the same size.  Unproportional countries may vary quite a bit in size.
+*Country Shapes:  Specifies how "weird" the countries are shaped, for lack of a better description.  Normal countries are blob-shaped in general.  Irregular countries tend to be more thin, spidery, and spread out.  Experiment with this one.
+*Minimum Allowed Lake Size:  This specifies the smallest size that a lake can be.  In other words, there will be no lakes smaller than this setting.
+*Approximate Land-Water ratio:  This setting specifies what percentage of the map will be land.  Note that other settings may affect this quite a bit.  For example, unproportional countries may result in a bit more water present than what this setting shows.  Experiment.
+*Islands:  Just what it says.  If "No Islands" is chosen, all countries will be part of the same land mass.  If "Lots of Islands" is chosen, you can expect scattered clusters of countries all over the map.
+
+Above all, experiment!  See how different settings can combine to make more realistic maps.
+
+Note that some maps take longer to generate than others.  The quickest ways to speed up map generation are to lower the land:water ratio, lower the country size, or make the countries more unproportional.  This is because LandMass has more trouble placing countries as the map fills up with land.  LandMass should never get stuck permanently though, as it has a built-in detection method for stubborn countries.  If it can't place a country after 2000 tries, it will skip to the next one.  On my PII-266 machine, no map has ever taken longer than about 15-20 seconds to generate.  Most get built in under 5.
+
+
+
+3.0 Interacting with a map
+
+LandMass contains a small example of how to interact with a map once it is visible on screen.  After the map is displayed, roll the mouse over it and watch the status bar at the bottom.  Each country has an ID number which is displayed as the cursor rolls over that country.  Each water mass has a unique ID as well.  Clicking the mouse button on a country or water mass will select it, and its ID appears in the selection box to the right.  Once an item is selected, the "Bordering" button becomes active.
+
+Clicking on the "Bordering" button with a country selected will highlight in red all the adjacent countries.  In other words, which countries can attack this one?
+
+Clicking on the "Bordering" button with water selected will highlight in red all the coastal countries that share that water mass.  Useful to see which countries might be reachable by boat!
+
+The "Redraw" button will remove the red highlighted countries and redraw the map.
+
+
+
+4.0 Future enhancements
+
+I do intend to turn LandMass into a full-functioning Risk-type game.  I'm still learning a lot about VB and API calls in particular, but I do know that BitBlt will do just about all the graphics manipulations I need.  Eventually I want to be able to do all the things I used to be able to do with 6502 assembly on the C64.  Then I want a job in the gaming industry!
+
+Here's a list of things that I intend to add sooner or later:
+
+* Load/Save maps.
+* A map editor.  Lords of Conquest had one.
+* Need a way to write pertinent info about each country directly on the screen.  In other words, how do I draw this country's population on the country itself?  Do I have to find a center of mass for each country, so to speak?  This could get messy with Irregular-shaped countries.
+* Need a way to refer to countries other than the ID number.  Maybe allow the user to name countries as they're selected.
+* Need a better way to handle bordering countries.  Right now, if more than 15 entities border a given country, the extras are ignored and you're given a message at build time.
+* Animated water.
+* Add mountains and other land features to the LandMap tileset for some variety!
+* Determine if a water mass is a lake (no screen borders) or an ocean (borders the screen edge).  This would tell you if a particular country had a port and could import goods.
+* Artificial intelligence!  This will be the kicker once I have a reasonable game design down.
+ 
